@@ -91,16 +91,18 @@ int bits_count_lookup_table(unsigned int number)
     return count;
 }
 /* algorithm: pop count
- * take 6 steps
+ * very fast and no extra memory
  */
 int bits_count_pop_count(unsigned int n)
 {   
     n = n - ((n >> 1) & 0x55555555);
     n = (n & 0x33333333) + ((n >> 2) & 0x33333333);
-    n = (n + (n >> 4)) & 0x0F0F0F0F;
-    n = n + (n >> 8);
-    n = n + (n >> 16);
-    n = n & 0x3F;
+    n = ((n + (n >> 4) & 0x0F0F0F0F) * 0x1010101) >> 24;
+    // the follow code can replace the above line
+    // n = (n + (n >> 4)) & 0x0F0F0F0F;
+    // n = n + (n >> 8);
+    // n = n + (n >> 16);
+    // n = n & 0x3F;
     return n;
 }
 
