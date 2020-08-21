@@ -18,7 +18,7 @@ using namespace std;
 /* algorithm: iterate the bits one by one, 
 *  the total steps is 32.
  */
-int bit_count_set_bits_for_loop(unsigned int number) 
+int bits_count_for_loop(unsigned int number) 
 {
     int count = 0;
     for (int i = 0; i < (sizeof(number) * 8); ++i) {
@@ -31,7 +31,7 @@ int bit_count_set_bits_for_loop(unsigned int number)
 /* algorithm: check the bits one by one until the "bytes" is 0
  * the total steps is less than 32.
  */
-int bit_count_set_bits_while_loop(unsigned int number)
+int bits_count_while_loop(unsigned int number)
 {
     int count = 0;
     while (number) {
@@ -43,16 +43,16 @@ int bit_count_set_bits_while_loop(unsigned int number)
 /* algorithm: check the rightmost bit recursively
  * the total steps is less than 32.
  */
-int bit_count_set_bits_recursive(unsigned int number)
+int bits_count_recursive(unsigned int number)
 {
     if (number == 0) {
         return 0;
     }
-    return (number & 1) + bit_count_set_bits_recursive(number >> 1);
+    return (number & 1) + bits_count_recursive(number >> 1);
 }
 /* algorithm: Brian Kernighan's
  */
-int bit_count_set_bits_kernighan(unsigned int number)
+int bits_count_kernighan(unsigned int number)
 {
     int count = 0;
     while (number) {
@@ -66,7 +66,7 @@ int bit_count_set_bits_kernighan(unsigned int number)
  * only takes 3 steps without building the table.
  * the fastest method if the table is built in advance.
  */
-int bit_count_set_bits_lookup_table(unsigned int number)
+int bits_count_lookup_table(unsigned int number)
 {
     // the table can be generated statically before this call 
     int bits_set_table[256];
@@ -93,7 +93,7 @@ int bit_count_set_bits_lookup_table(unsigned int number)
 /* algorithm: pop count
  * take 6 steps
  */
-int bit_count_set_bits_pop_count(unsigned int n)
+int bits_count_pop_count(unsigned int n)
 {   
     n = n - ((n >> 1) & 0x55555555);
     n = (n & 0x33333333) + ((n >> 2) & 0x33333333);
@@ -109,7 +109,7 @@ int bit_count_set_bits_pop_count(unsigned int n)
  */
 #include <bitset>
 
-int bit_count_set_bits_cpp_bitset(unsigned int number)
+int bits_count_cpp_bitset(unsigned int number)
 {
     bitset<32> bs(number);
     return bs.count();
@@ -130,28 +130,28 @@ int main()
     cout << "number: " << bytes << endl;
     cout.setf(ios::dec, ios::basefield);
 
-    bits_count = bit_count_set_bits_for_loop(bytes);
+    bits_count = bits_count_for_loop(bytes);
     cout << "for_loop:  \t count = " << bits_count << endl;
 
-    bits_count = bit_count_set_bits_while_loop(bytes);
+    bits_count = bits_count_while_loop(bytes);
     cout << "while_loop: \t count = " << bits_count << endl;
 
-    bits_count = bit_count_set_bits_kernighan(bytes);
+    bits_count = bits_count_kernighan(bytes);
     cout << "kernighan: \t count = " << bits_count << endl;
 
-    bits_count = bit_count_set_bits_recursive(bytes);
+    bits_count = bits_count_recursive(bytes);
     cout << "recursive: \t count = " << bits_count << endl;
 
-    bits_count = bit_count_set_bits_lookup_table(bytes);
+    bits_count = bits_count_lookup_table(bytes);
     cout << "lookup_table: \t count = " << bits_count << endl;
 
-    bits_count = bit_count_set_bits_pop_count(bytes);
+    bits_count = bits_count_pop_count(bytes);
     cout << "pop_count:  \t count = " << bits_count << endl;
 
-    bits_count = bit_count_set_bits_cpp_bitset(bytes);
+    bits_count = bits_count_cpp_bitset(bytes);
     cout << "cpp_bitset: \t count = " << bits_count << endl;
 
-    // cout << "cpp_builtin: \t count = " << __builtin_popcount(bytes) << endl;
+    cout << "cpp_builtin: \t count = " << __builtin_popcount(bytes) << endl;
 
     return 0;
 } 
