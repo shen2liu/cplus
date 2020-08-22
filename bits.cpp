@@ -98,7 +98,7 @@ int bits_count_pop_count(unsigned int n)
     n = n - ((n >> 1) & 0x55555555);
     n = (n & 0x33333333) + ((n >> 2) & 0x33333333);
     n = ((n + (n >> 4) & 0x0F0F0F0F) * 0x1010101) >> 24;
-    // the follow code can replace the above line
+    // the following code can replace the above line
     // n = (n + (n >> 4)) & 0x0F0F0F0F;
     // n = n + (n >> 8);
     // n = n + (n >> 16);
