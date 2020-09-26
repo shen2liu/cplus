@@ -11,22 +11,18 @@
 //     Quick Sort           O(n*n)          O(n*log(n))
 //     Merge Sort           O(n*logn)       O(n*log(n))
 //     Shell Sort           O(n*(logn)^2)
-//     Heap Sort            O(n*log(n))     O(n*log(n))
 //     Radix Sort           O(m*(n+r))
+//     Heap Sort            O(n*log(n))     O(n*log(n))
 //     Binary Tree Sort (see tree.cpp)
-//     Counting Sort
-//     Bucket Sort
 //
 //  the following programs sort an arry in asending order.
 //
-//  note: using data type "long" as the data type array to
-//        distinguish from other arguments.
+//  note: using "long" as the data type of the array to distinguish 
+//        from other arguments.
 //
 #include <iostream>
-#include <chrono>
 
 using namespace std;
-using namespace std::chrono;
 
 /* Bubble Sort
  * algorithm: compare the item with the next one in the array (or list)
@@ -36,7 +32,7 @@ using namespace std::chrono;
  * time complexity: O(n*n)
  * space complexity: O(1)
  */
-void algorithm_bubble_sort(long *a, int sz)
+void bubble_sort(long *a, int sz)
 {   
     bool swapped;
     int  k = 0;
@@ -65,7 +61,7 @@ void algorithm_bubble_sort(long *a, int sz)
  *    - number of elements in the array is small
  *    - the array is almost sorted, only a few of elements need to be sorted.
  */
-void algorithm_insertion_sort(long *a, int sz)
+void insertion_sort(long *a, int sz)
 {
     for (int k = sz - 2; k >= 0; --k) {
         int i = k + 1;
@@ -81,12 +77,12 @@ void algorithm_insertion_sort(long *a, int sz)
  * algorithm: start from the beginning (index 0),
  *            find the index of the least number, swap it to the front,
  *            work on the next item, find the least and swap, until the end.
- * implemetation: the simplest, could use binary search to find the least.
+ * implemetation: the simplest method.
  * time complexity: O(n*n)
  * space complexity: O(1)
  * applications:
  */
-void algorithm_selection_sort(long *a, int sz)
+void selection_sort(long *a, int sz)
 {
     for (int j = 0; j < sz; ++j) {
         int low = j;
@@ -116,7 +112,7 @@ void algorithm_selection_sort(long *a, int sz)
  * time complexity: best O(n*log(n)), worst O(n*n)
  * space complexity: O(1)
  */
-void algorithm_quick_sort(long *a, int left, int right)
+void single_pivot_quick_sort(long *a, int left, int right)
 {
     if (left >= right) {
         return;
@@ -132,15 +128,15 @@ void algorithm_quick_sort(long *a, int left, int right)
         }
     }
     swap(a[j], a[left]);
-    algorithm_quick_sort(a, left, j - 1);
-    algorithm_quick_sort(a, j + 1, right);
+    single_pivot_quick_sort(a, left, j - 1);
+    single_pivot_quick_sort(a, j + 1, right);
 }
 /* Dual Pivot Qick Sort
  *   Invented by Vladimir Yaroslavskiy in 2009.
  *   it is faster than the single pivot quick sort,
  *   now it is the default sort algorithm of Java.
  * Algorithm:
- *   it uses two pivots, one in the left, the other in the right.
+ *   it uses two pivots, one on the left, the other on the right.
  *   partition the arry into three parts:
  *   elements in the left part are less than the left pivot.
  *   elements in the right part are greater than the right pivot.
@@ -155,7 +151,7 @@ void algorithm_quick_sort(long *a, int left, int right)
  *   the single pivot Quicksort has 2*n*ln(n) and 1*n*ln(n) respectively.
  * Space Complexity: O(1)
  */
-void algorithm_dual_pivot_quick_sort(long *a, int left, int right)
+void dual_pivot_quick_sort(long *a, int left, int right)
 {
     if (left >= right)
         return;
@@ -193,9 +189,9 @@ void algorithm_dual_pivot_quick_sort(long *a, int left, int right)
     swap(a[left], a[--j]); 
     swap(a[right], a[++g]); 
   
-    algorithm_dual_pivot_quick_sort(a, left,  j - 1);
-    algorithm_dual_pivot_quick_sort(a, j + 1, g - 1);
-    algorithm_dual_pivot_quick_sort(a, g + 1, right);
+    dual_pivot_quick_sort(a, left,  j - 1);
+    dual_pivot_quick_sort(a, j + 1, g - 1);
+    dual_pivot_quick_sort(a, g + 1, right);
 }
 /* Merge Sort
  *    efficient for external sorting, such as, data in a file.
@@ -212,7 +208,7 @@ void algorithm_dual_pivot_quick_sort(long *a, int left, int right)
  *    - sort the (huge) files on the disks.
  *    - sort the linked list, no extra memory needed.
  */
-void algorithm_merge(long a[], int left, int middle, int right)
+void merge_sort(long a[], int left, int middle, int right)
 {
     int i, j, k; 
     int n1 = middle - left + 1; 
@@ -227,11 +223,10 @@ void algorithm_merge(long a[], int left, int middle, int right)
     for (j = 0; j < n2; j++) {
         R[j] = a[middle + 1 + j]; 
     }
-  
+
     i = 0;      // Initial index of left subarray 
     j = 0;      // Initial index of second subarray 
     k = left;   // Initial index of merged subarray 
-
     // merge the two sub-arrays back into the orginal array by
     // inserting the smaller data at the heads of the two arrays.
     while (i < n1 && j < n2) { 
@@ -254,7 +249,7 @@ void algorithm_merge(long a[], int left, int middle, int right)
         a[k++] = R[j++]; 
     }
 } 
-void algorithm_merge_sort(long a[], int left, int right)
+void merge_sort_recursive(long a[], int left, int right)
 { 
     if (left >= right) { 
         return;
@@ -262,88 +257,81 @@ void algorithm_merge_sort(long a[], int left, int right)
     // middle = (l+r)/2
     int middle = left + ((right - left) >> 1);
   
-    algorithm_merge_sort(a, left, middle); 
-    algorithm_merge_sort(a, middle + 1, right); 
-    algorithm_merge(a, left, middle, right); 
+    merge_sort_recursive(a, left, middle); 
+    merge_sort_recursive(a, middle + 1, right); 
+    merge_sort(a, left, middle, right); 
 } 
-/* Shell Sort
+/* Shell Sort Half
+ *    always split the array into half (virtually)
+ *    a special case of the Shell Sort
+ * Algorithm:
+ *    run sort algorithm on half of the array, then
+ *    reduce the array into half again.
  */
-void algorithm_shell_half_sort(long a[], int sz)
+void shell_half_sort(long a[], int sz)
 {
-    // Start with a big gap, then reduce the gap 
-    for (int gap = sz/2; gap > 0; gap /= 2) 
+    for (int gap = sz >> 1; gap > 0; gap /= 2) 
     { 
-        // cout << "gap=" << gap << endl;
-        // Do a gapped insertion sort for this gap size. 
-        // The first gap elements a[0..gap-1] are already in gapped order 
-        // keep adding one more element until the entire array is gap sorted  
+        // put the a[i] in its correct location using insertion sort
         for (int i = gap; i < sz; ++i) 
         { 
-            // add a[i] to the elements that have been gap sorted 
-            // save a[i] in temp and make a hole at position i 
             int temp = a[i]; 
-            
-            // cout << "gap=" << gap << " i=" << i << " " << temp << " a[i]=" << a[i];
-  
-            // shift earlier gap-sorted elements up until the correct  
-            // location for a[i] is found 
             int j;             
             for (j = i; j >= gap && a[j - gap] > temp; j -= gap) {
                 a[j] = a[j - gap]; 
-                // cout << " j=" << j << " " << a[j] << " j-gap=" << j - gap << " " << a[j-gap];
             }
-            //  put temp (the original a[i]) in its correct location 
             a[j] = temp; 
-            // cout << "  # j=" << j << " a[j]=" << a[j] << endl;
         } 
-        // for (int k = 0; k < sz; k++) { cout << a[k] << " "; } cout << endl;
     }   
 }
 /* Shell Sort
  *    invented by D. L. Shell to inprove the insertion and bubble sort.
- *    efficiently select the gap (shell) sizes, eg. 40, 13, 4, 1, etc.
+ *    efficiently select the gap (shell) sizes, e.g. 40, 13, 4, 1, etc.
  * algorithm:
+ *    split the arrays into subarrays (virtually), reduce the number of
+ *    subarrays  until there is only one, sort each subarrays.
+ * time complexity: O(n^1.25)
+ * applications: 
+ *    work together with other sort algorithms
  */
-void algorithm_shell_sort(long a[], int sz)
+void shell_sort(long a[], int sz)
 {
     int k2, k1, k;
-    int shell_size = sz;
-    int change = 0;
+    int gap = sz;
 
-    while (shell_size > 1) {
+    while (gap > 1) {
         k2 = 0;
         k1 = 1;
-        // cout << "shell=" << shell_size << " k=" << k1 * 4 - k2 * 3;
-        while ((k = k1 * 4 - k2 * 3) < shell_size) {
+        // find the gap size using the rule: k1 * 4 - k2 * 3
+        while ((k = k1 * 4 - k2 * 3) < gap) {
             k2 = k1;
             k1 = k;
         }
         k = k1;
-        // cout << " k2=" << k2 << " k1=" << k1 << " k=" << k << endl;
+        // sort each subarrays using the insertion sort
         for (int i = k; i < sz; i++) {
             long tmp = a[i];
             int s = i - k;
             while (s >= 0 && tmp < a[s]) {
                 a[s + k] = a[s];
-                ++change;
-                // cout << "swap " << change << ": " << i << "-" << s << "-" << s + k << " " << tmp << " " << a[s] << endl;
                 s -= k;
             }
             a[s + k] = tmp;
         }
-        // for (int j = 0; j < sz; j++) { cout << a[j] << " "; } cout << endl;
-        shell_size = k;
+        // repeat the steps until the gap is 1
+        gap = k;
     }
 }
 /* Radix (Exchange) Sort
  * algorithm: similar to the quick sort, instead of comparing the data,
  *    radix compares the bits (from msb to lsb).
+ *    max bitnum = 31 (sizeof(long) * 4 - 1)
  * implementation: recursive, iterative
- * time complexity: 
+ * time complexity: O(n*log(n))
  * application: 
  *    more suitable for hardware implementation.
  */
-void algorithm_radix_sort(long a[], int first, int last, int bitnum)
+void radix_sort(long a[], int first, int last, int bitnum)
 {
     if (first >= last || bitnum < 0 ) {
         return;
@@ -357,104 +345,77 @@ void algorithm_radix_sort(long a[], int first, int last, int bitnum)
     }
     if ( !((a[last] >> bitnum) & 1) ) { ++j; }
     // cout << "bit=" << bitnum << " i=" << i << " j=" << j << " " << a[i] << " " << a[j] << endl;
-    algorithm_radix_sort(a, first, j - 1, bitnum - 1);
-    algorithm_radix_sort(a, j, last, bitnum - 1);
+    radix_sort(a, first, j - 1, bitnum - 1);
+    radix_sort(a, j, last, bitnum - 1);
 }
 
 /* testing driver code
  */
-// void test_sort(long B[], int n, (void *)f())
-// {
-// }
+#include <chrono>
+#include <functional>
+#include <cmath>
+
+void sort_display(long a[], int n)
+{
+    if (n < 0)  return;
+
+    const int words_line = min(16, n);
+    const int word_width = log10(n * 10) + 1;
+
+    // for(int i = 0; i < n; ++i) { cout.width(word_width); cout << a[i] << ", ";  if ((i + 1) % words_line == 0) { cout << endl; } } cout << endl;
+
+    for(int i = 0; i < words_line; ++i) { cout.width(word_width); cout << a[i] << ", "; } cout << endl;
+
+    if (n > words_line) {
+        for(int i = n - words_line; i < n; ++i) { cout.width(word_width); cout << a[i] << ", "; } cout << endl;
+    }
+    cout << endl;
+}
+
+void sort_function(long a[], int n, function<void (long*, int)> f) { f(a, n); }
+void sort_function(long a[], int n, function<void (long*, int, int)> f) { f(a, 0, n -1); }
+void sort_function(long a[], int n, function<void (long*, int, int, int)> f) { f(a, 0, n - 1, sizeof(a[0]) * 4 - 1); }
+
+// C++ std::chrono couldn't get a time in nanoseconds on my Windows PC
+#define TESTING_SORT(s, f) \
+{ \
+    cout << "\e[1m" << s << "\e[0m" << ": "; \
+    copy(B, B + n, A); \
+	auto start = chrono::high_resolution_clock::now(); \
+    sort_function(A, n, f); \
+	auto end = chrono::high_resolution_clock::now(); \
+    cout << "Elapsed time " << chrono::duration_cast<chrono::microseconds>(end - start).count() << " us " << endl; \
+    sort_display(A, n); \
+}
 
 int main()
 {
-    // cout << "Input an integer: ";
-    // cin >> n;
-    int n = 18;
+    int n = 10000;
     long A[n];
     long B[n];        
     
-    cout << "---- generate " << n << " random numbers ----" << endl;
     for(int i = 0; i < n; ++i) { B[i] = rand() % (n * 10); }
-    cout << "Original Array: " << endl;
-    for(int i = 0; i < n; ++i) { cout.width(4); cout << B[i] << ", ";  if ((i + 1) % 20 == 0) { cout << endl; } } cout << endl;
+    cout << "Original Array: " << n << " random numbers"<< endl;
+    sort_display(B, n);
 
-    cout << "Bubble Sort: ";
-    copy(B, B + n, A);
-	auto start = steady_clock::now();
-    algorithm_bubble_sort(A, n);
-	auto end = steady_clock::now();
-    cout << "Elapsed time: " << duration_cast<microseconds>(end - start).count() << " us" << endl;
-    for(int i = 0; i < n; ++i) { cout.width(4); cout << A[i] << ", ";  if ((i + 1) % 20 == 0) { cout << endl; } } cout << endl;
+    TESTING_SORT("Bubble Sort", bubble_sort);
 
-    cout << "Insertion Sort: ";
-    copy(B, B + n, A);
-	start = chrono::steady_clock::now();
-    algorithm_insertion_sort(A, n);
-	end = chrono::steady_clock::now();
-    cout << "Elapsed time: " << chrono::duration_cast<chrono::microseconds>(end - start).count() << " us" << endl;
-    for(int i = 0; i < n; ++i) { cout.width(4); cout << A[i] << ", ";  if ((i + 1) % 20 == 0) { cout << endl; } } cout << endl;
+    TESTING_SORT("Insertion Sort", insertion_sort);
 
-    cout << "Selection Sort: ";
-    copy(B, B + n, A);
-	start = chrono::steady_clock::now();
-    algorithm_selection_sort(A, n);
-	end = chrono::steady_clock::now();
-    cout << "Elapsed time: " << chrono::duration_cast<chrono::microseconds>(end - start).count() << " us" << endl;
-    for(int i = 0; i < n; ++i) { cout.width(4); cout << A[i] << ", ";  if ((i + 1) % 20 == 0) { cout << endl; } } cout << endl;
+    TESTING_SORT("Selection Sort", selection_sort);
 
-    cout << "Quick Sort: ";
-    copy(B, B + n, A);
-    // long C[] = {33, 60, 5, 15, 25, 12, 45, 70, 35, 7};
-	start = chrono::steady_clock::now();
-    algorithm_quick_sort(A, 0, n - 1);
-	end = chrono::steady_clock::now();
-    cout << "Elapsed time: " << chrono::duration_cast<chrono::microseconds>(end - start).count() << " us" << endl;
-    for(int i = 0; i < n; ++i) { cout.width(4); cout << A[i] << ", ";  if ((i + 1) % 20 == 0) { cout << endl; } } cout << endl;
+    TESTING_SORT("Quick Sort", single_pivot_quick_sort);
 
-    cout << "Dual Pivot Quick Sort: ";
-    copy(B, B + n, A);
-    // long C[] = {33, 60, 5, 15, 25, 12, 45, 70, 35, 7};
-	start = chrono::steady_clock::now();
-    algorithm_dual_pivot_quick_sort(A, 0, n - 1);
-	end = chrono::steady_clock::now();
-    cout << "Elapsed time: " << chrono::duration_cast<chrono::microseconds>(end - start).count() << " us" << endl;
-    for(int i = 0; i < n; ++i) { cout.width(4); cout << A[i] << ", ";  if ((i + 1) % 20 == 0) { cout << endl; } } cout << endl;
+    TESTING_SORT("Dual Pivot Quick Sort", dual_pivot_quick_sort);
 
-    cout << "Merge Sort: ";
-    copy(B, B + n, A);
-	start = chrono::steady_clock::now();
-    algorithm_merge_sort(A, 0, n - 1);
-	end = chrono::steady_clock::now();
-    cout << "Elapsed time: " << chrono::duration_cast<chrono::microseconds>(end - start).count() << " us" << endl;
-    for(int i = 0; i < n; ++i) { cout.width(4); cout << A[i] << ", ";  if ((i + 1) % 20 == 0) { cout << endl; } } cout << endl;
+    TESTING_SORT("Merge Sort", merge_sort_recursive);
 
-    cout << "Shell Half: ";
-    copy(B, B + n, A);
-	start = chrono::steady_clock::now();
-    algorithm_shell_half_sort(A, n);
-	end = chrono::steady_clock::now();
-    cout << "Elapsed time: " << chrono::duration_cast<chrono::microseconds>(end - start).count() << " us" << endl;
-    for(int i = 0; i < n; ++i) { cout.width(4); cout << A[i] << ", ";  if ((i + 1) % 20 == 0) { cout << endl; } } cout << endl;
+    TESTING_SORT("Shell Half", shell_half_sort);
 
-    cout << "Shell Sort: ";
-    copy(B, B + n, A);
-	start = steady_clock::now();
-    algorithm_shell_sort(A, n);
-	end = steady_clock::now();
-    microseconds duration(duration_cast<microseconds>(end - start));
-    cout << "Elapsed time: " << duration.count() << " us" << endl;
-    for(int i = 0; i < n; ++i) { cout.width(4); cout << A[i] << ", ";  if ((i + 1) % 20 == 0) { cout << endl; } } cout << endl;
+    TESTING_SORT("Shell Sort", shell_sort);
 
-    cout << "Radix Sort: ";
-    copy(B, B + n, A);
-	start = steady_clock::now();
-    algorithm_radix_sort(A, 0, n - 1, sizeof(A[0]) * 4 - 1);    // max_bits = 31 (sizeof(long) * 4 - 1))
-	end = steady_clock::now();
-    cout << "Elapsed time: " << chrono::duration_cast<chrono::microseconds>(end - start).count() << " us" << endl;
-    for(int i = 0; i < n; ++i) { cout.width(4); cout << A[i] << ", ";  if ((i + 1) % 20 == 0) { cout << endl; } } cout << endl;
+    TESTING_SORT("Radix Sort", radix_sort);
 
-    cout << "Heap Sort: see \"heap.cpp\"";
+    cout << "Heap Sort: see \"heap.cpp\"" << endl << endl;
 } 
 
