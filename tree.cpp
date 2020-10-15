@@ -88,7 +88,7 @@ public:
     ~BinaryTree() { free_tree(tree_root); tree_root = nullptr; }
 
     TreeNode* search(TreeNode* &root, long data);
-    TreeNode* search(long data) { search(tree_root, data); }
+    TreeNode* search(long data) { return search(tree_root, data); }
     TreeNode* insert(long data);
     TreeNode* remove(long data);
     TreeNode* get_root() const { return tree_root; }
@@ -99,14 +99,14 @@ public:
     int  height() { return height(tree_root); }
     bool empty() { return tree_root == nullptr; }
     bool balanced(TreeNode *root);
-    bool balanced() { balanced(tree_root); }
+    bool balanced() { return balanced(tree_root); }
     bool completed(TreeNode *root);
-    bool completed() { completed(tree_root); }
+    bool completed() { return completed(tree_root); }
     bool is_binary_search_tree(TreeNode *root, long min_data, long max_data);
-    bool is_binary_search_tree() { is_binary_search_tree(tree_root, LONG_MIN, LONG_MAX); };
+    bool is_binary_search_tree() { return is_binary_search_tree(tree_root, LONG_MIN, LONG_MAX); };
 
-    virtual long min() {}
-    virtual long max() {}
+    virtual long min() { return 0; }
+    virtual long max() { return 0; }
     virtual void sort(vector<long>& v) {}
 
     void print_preorder(TreeNode *root);
@@ -298,6 +298,7 @@ TreeNode* BinaryTree::insert(long data)
             return tnode->right;
         }
     }
+    return tree_root;
 }
 /* remove()
  *   find the node, remove it and replace it with the last node
@@ -439,16 +440,16 @@ public:
     BinarySearchTree(BinaryTree &btree);
 
     TreeNode* insert(TreeNode* &root, long data);
-    TreeNode* insert(long data) { insert(tree_root, data); }
+    TreeNode* insert(long data) { return insert(tree_root, data); }
     TreeNode* remove(TreeNode* &root, long data);
-    TreeNode* remove(long data) { remove(tree_root, data); }
+    TreeNode* remove(long data) { return remove(tree_root, data); }
     TreeNode* search(TreeNode *root, long data);
-    TreeNode* search(long data) { search(tree_root, data); }
+    TreeNode* search(long data) { return search(tree_root, data); }
 
     TreeNode* min_node(TreeNode *root);
-    TreeNode* min_node() { min_node(tree_root); }
+    TreeNode* min_node() { return min_node(tree_root); }
     TreeNode* max_node(TreeNode *root);
-    TreeNode* max_node() { max_node(tree_root); }
+    TreeNode* max_node() { return max_node(tree_root); }
     long min() { return min_node()->data; }
     long max() { return max_node()->data; }
     void sort(TreeNode *root, vector<long>& v);
@@ -621,9 +622,9 @@ public:
     AVLTree(BinarySearchTree& bst);
 
     TreeNode* insert(TreeNode* &root, long data);
-    TreeNode* insert(long data) { insert(tree_root, data); }
+    TreeNode* insert(long data) { return insert(tree_root, data); }
     TreeNode* remove(TreeNode* &root, long data); 
-    TreeNode* remove(long data) { remove(tree_root, data); }
+    TreeNode* remove(long data) { return remove(tree_root, data); }
 };
 
 /* constructor:
