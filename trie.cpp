@@ -18,7 +18,7 @@ const char  ROOT = '@';             // 0x0D, indicate the root of the trie
 const char  END  = '\0';            // 0x20, not-in-use node or end of a word
 
 __inline__ static 
-char lower_letter(char c) { if (c <= 'Z') return c + 32; }
+char lower_letter(char c) { if ((c >= 'A') && (c <= 'Z')) return c + 32; else return c; }
 
 
 class TrieNode {

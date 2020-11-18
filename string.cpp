@@ -349,7 +349,8 @@ bool string_match_cpp_find(string str_text, string str_pattern, vector<int>& res
     while (found != string::npos) {
         results.push_back(found);
         found = str_text.find(str_pattern, found + 1);
-    } 
+    }
+    return results.size();
 }
 
 /* testing driver code
