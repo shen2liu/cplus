@@ -245,8 +245,8 @@ int fibonacci_search(long a[], int sz, long key)
 
 using namespace std::chrono;
 
-int search_function(long a[], int n, int i, function<int (long*, int, long)> f) { f(a, n, a[i]); }
-int search_function(long a[], int n, int i, function<int (long*, int, int, long)> f) { f(a, n, 22, a[i]); }
+int search_function(long a[], int n, int i, function<int (long*, int, long)> f) { return f(a, n, a[i]); }
+int search_function(long a[], int n, int i, function<int (long*, int, int, long)> f) { return f(a, n, 22, a[i]); }
 
 #define TESTING_SEARCH(s, f) { \
     cout << "\e[1m" << s << "\e[0m" << ": "; \
